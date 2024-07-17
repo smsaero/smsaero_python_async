@@ -1,0 +1,23 @@
+variables:
+  RELEASE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+
+stages:
+  - test
+
+
+test:
+  stage: test
+  timeout: 10m
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t test -f Dockerfile --no-cache .
+    - docker run --rm test /bin/bash -c 'ruff check --config .ruff.toml ./smsaero'
+    - docker run --rm test /bin/bash -c 'flake8 --config=.flake8 ./smsaero'
+    - docker run --rm test /bin/bash -c 'pylint ./smsaero'
+    - docker run --rm test /bin/bash -c 'mypy ./smsaero'
+    - docker run --rm test /bin/bash -c 'pytest -v -s []'
+  after_script:
+    - docker rmi -f test || true
