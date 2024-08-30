@@ -21,7 +21,7 @@ limited to a small number of function signature changes.
 The `MAJOR` version is used to indicate the family of technology represented by
 the helper project. Breaking changes that require extensive reworking of code
 will cause the `MAJOR` version to be incremented by one, and the `MINOR` and
-`PATCH` versions will be reset to zero. Twilio understands that this can be very
+`PATCH` versions will be reset to zero. SmsAero understands that this can be very
 disruptive, so we will only introduce this type of breaking change when
 absolutely necessary. New `MAJOR` versions will be communicated in advance with
 `Release Candidates` and a schedule.

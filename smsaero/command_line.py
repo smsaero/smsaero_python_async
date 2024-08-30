@@ -10,7 +10,7 @@ import sys
 from smsaero import SmsAero, SmsAeroException
 
 
-async def main() -> None:
+async def main_async() -> None:
     """
     Parses command line arguments and sends an SMS message via SmsAero asynchronously.
 
@@ -42,5 +42,12 @@ async def main() -> None:
         await api.close_session()
 
 
+def main() -> None:
+    """
+    Runs the main function asynchronously.
+    """
+    asyncio.run(main_async())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

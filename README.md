@@ -70,7 +70,7 @@ docker run -it --rm 'smsaero/smsaero_python_async:latest' smsaero_send --email "
 
 ## Compatibility:
 
-* Currently version of library is compatible with Python 3.6+.
+* Currently version of library is compatible with Python 3.7+.
 
 
 ## License:
