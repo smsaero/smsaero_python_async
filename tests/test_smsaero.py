@@ -802,3 +802,92 @@ class TestSmsAero(unittest.TestCase):
                 "number": 79031234567,
             },
         )
+
+    @patch.object(SmsAero, "request")
+    async def test_send_telegram(self, mock_request):
+        mock_request.return_value = {
+            "id": 1,
+            "number": "79990000000",
+            "telegramCode": "1234",
+            "smsText": "Ваш код 1234",
+            "smsFrom": "SMS Aero",
+            "idSms": None,
+            "status": 0,
+            "extendStatus": "queue",
+            "cost": "1.00",
+            "dateCreate": 1732796285,
+        }
+
+        result = await self.smsaero.send_telegram(79990000000, 1234)
+
+        self.assertEqual(
+            result,
+            {
+                "id": 1,
+                "number": "79990000000",
+                "telegramCode": "1234",
+                "smsText": "Ваш код 1234",
+                "smsFrom": "SMS Aero",
+                "idSms": None,
+                "status": 0,
+                "extendStatus": "queue",
+                "cost": "1.00",
+                "dateCreate": 1732796285,
+            },
+        )
+        mock_request.assert_called_once_with("telegram/send", {"code": 1234, "number": 79990000000})
+
+    @patch.object(SmsAero, "request")
+    async def test_send_telegram_with_sign_and_text(self, mock_request):
+        mock_request.return_value = {"success": True}
+
+        result = await self.smsaero.send_telegram(79990000000, 1234, "TestSign", "Your code is 1234")
+
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with(
+            "telegram/send", {"code": 1234, "number": 79990000000, "sign": "TestSign", "text": "Your code is 1234"}
+        )
+
+    @patch.object(SmsAero, "request")
+    async def test_send_telegram_with_list_of_numbers(self, mock_request):
+        mock_request.return_value = {"success": True}
+        numbers = [79990000000, 79990000001]
+
+        result = await self.smsaero.send_telegram(numbers, 1234)
+
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with("telegram/send", {"code": 1234, "numbers": numbers})
+
+    @patch.object(SmsAero, "request")
+    async def test_telegram_status(self, mock_request):
+        mock_request.return_value = {
+            "id": 1,
+            "number": "79990000000",
+            "telegramCode": "1234",
+            "smsText": "Ваш код 1234",
+            "smsFrom": "SMS Aero",
+            "idSms": None,
+            "status": 1,
+            "extendStatus": "delivery",
+            "cost": "1.00",
+            "dateCreate": 1732796285,
+        }
+
+        result = await self.smsaero.telegram_status(1)
+
+        self.assertEqual(
+            result,
+            {
+                "id": 1,
+                "number": "79990000000",
+                "telegramCode": "1234",
+                "smsText": "Ваш код 1234",
+                "smsFrom": "SMS Aero",
+                "idSms": None,
+                "status": 1,
+                "extendStatus": "delivery",
+                "cost": "1.00",
+                "dateCreate": 1732796285,
+            },
+        )
+        mock_request.assert_called_once_with("telegram/status", {"id": 1})

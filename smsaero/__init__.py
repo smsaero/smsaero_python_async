@@ -1103,6 +1103,77 @@ class SmsAero:
         self.page_validate(page)
         return await self.request("viber/statistic", {"sendingId": int(sending_id)}, page=page)
 
+    async def send_telegram(
+        self,
+        number: Union[int, List[int]],
+        code: int,
+        sign: Optional[str] = None,
+        text: Optional[str] = None,
+    ) -> Dict:
+        """
+        Sends a Telegram code to the specified number or numbers.
+
+        Parameters:
+        number (Union[int, List[int]]): The recipient's phone number or a list of phone numbers.
+        code (int): The Telegram code (4 to 8 digits).
+        sign (str, optional): The SMS sender name.
+        text (str, optional): The SMS message text.
+
+        When using text and sign parameters, if the Telegram code is not delivered,
+        an SMS will be sent with the specified values.
+
+        Returns:
+        Dict: The server's response in JSON format.
+
+        Example response:
+        {
+            "id": 1,
+            "number": "79990000000",
+            "telegramCode": "1234",
+            "smsText": "Ваш код 1234",
+            "smsFrom": "SMS Aero",
+            "idSms": null,
+            "status": 0,
+            "extendStatus": "queue",
+            "cost": "1.00",
+            "dateCreate": 1732796285
+        }
+        """
+        self.send_telegram_validate(number, code, sign, text)
+        data: Dict = {"code": int(code)}
+        data.update(**self.fill_nums(number))
+        if sign:
+            data["sign"] = sign
+        if text:
+            data["text"] = text
+        return await self.request("telegram/send", data)
+
+    async def telegram_status(self, telegram_id: int) -> Dict:
+        """
+        Retrieves the status of a Telegram code delivery.
+
+        Parameters:
+        telegram_id (int): The message ID returned by the service when sending.
+
+        Returns:
+        Dict: The server's response in JSON format.
+
+        Example response:
+        {
+            "id": 1,
+            "number": "79990000000",
+            "telegramCode": "1234",
+            "smsText": "Ваш код 1234",
+            "smsFrom": "SMS Aero",
+            "idSms": null,
+            "status": 1,
+            "extendStatus": "delivery",
+            "cost": "1.00",
+            "dateCreate": 1732796285
+        }
+        """
+        return await self.request("telegram/status", {"id": int(telegram_id)})
+
     def phone_validation(self, number: Union[int, List[int]]) -> None:
         """
         Validates the phone number or a list of phone numbers.
@@ -1379,6 +1450,41 @@ class SmsAero:
         if surname is not None and not isinstance(surname, str):
             raise TypeError("Surname must be a string.")
         self.page_validate(page)
+
+    def send_telegram_validate(
+        self,
+        number: Union[int, List[int]],
+        code: int,
+        sign: Optional[str] = None,
+        text: Optional[str] = None,
+    ) -> None:
+        """
+        Validates the parameters for the send_telegram method.
+
+        Parameters:
+        number (Union[int, List[int]]): The recipient's phone number or a list of phone numbers.
+        code (int): The Telegram code (4 to 8 digits).
+        sign (str, optional): The SMS sender name.
+        text (str, optional): The SMS message text.
+
+        Raises:
+        TypeError: If any of the parameters have an incorrect type.
+        ValueError: If any of the parameters have an incorrect value.
+        """
+        if not isinstance(code, int):
+            raise TypeError("code must be an integer")
+        if not 4 <= len(str(code)) <= 8:
+            raise ValueError("Length of code must be between 4 and 8 digits")
+        if sign is not None and not isinstance(sign, str):
+            raise TypeError("sign must be a string")
+        if sign is not None and not 2 <= len(sign) <= 64:
+            raise ValueError("Length of sign must be between 2 and 64 characters")
+        if text is not None and not isinstance(text, str):
+            raise TypeError("text must be a string")
+        if text is not None and not 2 <= len(text) <= 640:
+            raise ValueError("Length of text must be between 2 and 640 characters")
+
+        self.phone_validation(number)
 
     @staticmethod
     def init_validate(

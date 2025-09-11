@@ -1,4 +1,4 @@
-"""Setup script for the SmsAero API client package."""
+"""Setup script for the SMS Aero API client package."""
 
 from setuptools import setup, find_packages
 
@@ -9,8 +9,8 @@ with open("README.md", "r", encoding="utf-8") as file:
 
 setup(
     name="smsaero_api_async",
-    version="3.0.0",
-    description="SmsAero Async API client",
+    version="3.1.0",
+    description="SMS Aero Async API client",
     keywords=[
         "smsaero",
         "api",
@@ -21,7 +21,7 @@ setup(
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="SmsAero",
+    author="SMS Aero",
     author_email="admin@smsaero.ru",
     help_center="https://smsaero.ru/support/",
     url="https://github.com/smsaero/smsaero_python/",
@@ -75,6 +75,6 @@ setup(
         ],
     },
     options={
-        "bdist_wheel": {"universal": True},
+        "bdist_wheel": {"universal": False},
     },
 )

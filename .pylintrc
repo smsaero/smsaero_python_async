@@ -3,7 +3,7 @@ persistent=yes
 ignore=tests
 
 [MESSAGES CONTROL]
-disable=
+disable=R0917
 
 [SIMILARITIES]
 min-similarity-lines=6
@@ -15,7 +15,7 @@ notes=FIXME,XXX,TODO
 
 [FORMAT]
 max-line-length=120
-max-module-lines=1500
+max-module-lines=1600
 indent-string='    '
 
 [DESIGN]

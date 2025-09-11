@@ -335,3 +335,29 @@ class TestSmsAeroValidators(unittest.TestCase):
             self.smsaero.contact_list_validate(page="invalid_page")
         with self.assertRaises(ValueError):
             self.smsaero.contact_list_validate(number=[79038805678, "invalid_number"])
+
+    def test_send_telegram_validate(self):
+        with self.assertRaises(TypeError):
+            self.smsaero.send_telegram_validate("invalid_number", 1234)
+        with self.assertRaises(TypeError):
+            self.smsaero.send_telegram_validate(79990000000, "invalid_code")
+        with self.assertRaises(TypeError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, 123)
+        with self.assertRaises(TypeError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, "sign", 123)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 123)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 123456789)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, "T")
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, "T" * 65)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, "sign", "T")
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(79990000000, 1234, "sign", "T" * 641)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate(123, 1234)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_telegram_validate([123, 1234567890123456], 1234)

@@ -1,4 +1,4 @@
-# SmsAero async API client
+# Python async library for sending SMS messages via SMS Aero API
 
 [![PyPI version](https://badge.fury.io/py/smsaero-api-async.svg)](https://badge.fury.io/py/smsaero-api-async)
 [![Python Versions](https://img.shields.io/pypi/pyversions/smsaero-api-async.svg)](https://pypi.org/project/smsaero-api-async/)
@@ -41,8 +41,25 @@ async def send_sms(phone: int, message: str) -> None:
         await api.close_session()
 
 
+async def send_telegram_code(phone: int, code: int) -> None:
+    """
+    Sends a Telegram code
+
+    Parameters:
+    phone (int): The phone number to which the Telegram code will be sent.
+    code (int): The Telegram code (4 to 8 digits).
+    """
+    api = smsaero.SmsAero(SMSAERO_EMAIL, SMSAERO_API_KEY)
+    try:
+        result = await api.send_telegram(phone, code)
+        pprint.pprint(result)
+    finally:
+        await api.close_session()
+
+
 if __name__ == '__main__':
     asyncio.run(send_sms(70000000000, 'Hello, World!'))
+    asyncio.run(send_telegram_code(79990000000, 1234))
 ```
 
 #### Exceptions:

@@ -30,5 +30,6 @@ Dockerfile
 LICENSE
 MANIFEST.in
 .dccache
-smsaero_api_async.egg-info
-
+__pycache__
+.gitlab-ci.yml
+.travis.yml

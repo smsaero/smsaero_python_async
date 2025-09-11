@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -14,5 +14,5 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install 'aiohttp==3.9.5'
-RUN python setup.py develop && pip install -e .[dev]
+RUN pip install --no-cache-dir 'aiohttp==3.9.5' setuptools wheel pip
+RUN python setup.py develop && pip install --no-cache-dir -e .[dev]
