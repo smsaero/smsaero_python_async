@@ -59,7 +59,7 @@ async def send_telegram_code(phone: int, code: int) -> None:
 
 if __name__ == '__main__':
     asyncio.run(send_sms(70000000000, 'Привет, Мир!'))
-    asyncio.run(send_telegram_code(79990000000, 1234))
+    asyncio.run(send_telegram_code(70000000000, 1234))
 ```
 
 #### Исключения:

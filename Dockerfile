@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     python3-setuptools \
     python3-wheel \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
