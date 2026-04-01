@@ -361,3 +361,22 @@ class TestSmsAeroValidators(unittest.TestCase):
             self.smsaero.send_telegram_validate(123, 1234)
         with self.assertRaises(ValueError):
             self.smsaero.send_telegram_validate([123, 1234567890123456], 1234)
+
+    def test_send_mobile_id_validate(self):
+        with self.assertRaises(TypeError):
+            self.smsaero.send_mobile_id_validate([79031234567])
+        with self.assertRaises(TypeError):
+            self.smsaero.send_mobile_id_validate(79031234567, sign=123)
+        with self.assertRaises(TypeError):
+            self.smsaero.send_mobile_id_validate(79031234567, callback_url=123)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_mobile_id_validate(79031234567, sign="T")
+        with self.assertRaises(ValueError):
+            self.smsaero.send_mobile_id_validate(79031234567, sign="T" * 65)
+        with self.assertRaises(ValueError):
+            self.smsaero.send_mobile_id_validate(79031234567, callback_url="ftp://bad.url")
+        with self.assertRaises(ValueError):
+            self.smsaero.send_mobile_id_validate(123, callback_url="https://ok.url")
+
+    def test_send_mobile_id_validate_string_number(self):
+        self.smsaero.send_mobile_id_validate("79031234567")

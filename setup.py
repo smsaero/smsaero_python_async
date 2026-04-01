@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as file:
 
 setup(
     name="smsaero_api_async",
-    version="3.1.0",
+    version="3.2.0",
     description="SMS Aero Async API client",
     keywords=[
         "smsaero",

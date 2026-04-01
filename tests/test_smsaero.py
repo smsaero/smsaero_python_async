@@ -891,3 +891,66 @@ class TestSmsAero(unittest.TestCase):
             },
         )
         mock_request.assert_called_once_with("telegram/status", {"id": 1})
+
+    @patch.object(SmsAero, "request")
+    async def test_send_mobile_id(self, mock_request):
+        mock_request.return_value = {"success": True}
+        result = await self.smsaero.send_mobile_id(79031234567)
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with(
+            "mobile-id/send",
+            {"number": 79031234567, "sign": "Sms Aero"}
+        )
+
+    @patch.object(SmsAero, "request")
+    async def test_send_mobile_id_with_sign(self, mock_request):
+        mock_request.return_value = {"success": True}
+        result = await self.smsaero.send_mobile_id(79031234567, sign="Test Sign")
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with(
+            "mobile-id/send",
+            {"number": 79031234567, "sign": "Test Sign"}
+        )
+
+    @patch.object(SmsAero, "request")
+    async def test_send_mobile_id_with_callback_url(self, mock_request):
+        mock_request.return_value = {"success": True}
+        result = await self.smsaero.send_mobile_id(
+            79031234567, callback_url="https://example.com/callback"
+        )
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with(
+            "mobile-id/send",
+            {
+                "number": 79031234567,
+                "sign": "Sms Aero",
+                "callbackUrl": "https://example.com/callback",
+            }
+        )
+
+    @patch.object(SmsAero, "request")
+    async def test_mobile_id_status(self, mock_request):
+        mock_request.return_value = {"success": True}
+        result = await self.smsaero.mobile_id_status(12345)
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with("mobile-id/status", {"id": 12345})
+
+    @patch.object(SmsAero, "request")
+    async def test_verify_mobile_id(self, mock_request):
+        mock_request.return_value = {"success": True}
+        result = await self.smsaero.verify_mobile_id(12345, "1234")
+        self.assertEqual(result, {"success": True})
+        mock_request.assert_called_once_with(
+            "mobile-id/verify",
+            {"id": 12345, "code": "1234", "sign": "Sms Aero"}
+        )
+
+    @patch.object(SmsAero, "request")
+    async def test_verify_mobile_id_invalid_code_type(self, mock_request):
+        with self.assertRaises(TypeError):
+            await self.smsaero.verify_mobile_id(12345, 1234)
+
+    @patch.object(SmsAero, "request")
+    async def test_verify_mobile_id_empty_code(self, mock_request):
+        with self.assertRaises(ValueError):
+            await self.smsaero.verify_mobile_id(12345, "")
